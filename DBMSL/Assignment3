@@ -1,0 +1,415 @@
+te@pict-OptiPlex-9020:~$ mysql -h 10.10.15.233 -u te31458 -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 126
+Server version: 5.5.43-MariaDB MariaDB Server
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| 31458_db           |
+| test               |
++--------------------+
+3 rows in set (0.01 sec)
+
+mysql> use 31458_db;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++--------------------+
+| Tables_in_31458_db |
++--------------------+
+| department         |
+| employe            |
+| project            |
++--------------------+
+3 rows in set (0.00 sec)
+
+mysql> select * 
+    -> from employe
+    -> natural join department;
++---------+--------+-----------+-----------+----------------+------------+--------------+-----------+----------+
+| dept_id | emp_id | emp_fname | emp_lname | emp_pos        | emp_salary | emp_joindate | dept_name | dept_loc |
++---------+--------+-----------+-----------+----------------+------------+--------------+-----------+----------+
+|     150 |    198 | Donald    | OConnell  | Clerk          | 2600       | 2007-06-21   | Computer  | Pune     |
+|     100 |    199 | Jennifer  | Grant     | Assistant      | 4400       | 2003-09-17   | IT        | Mumbai   |
+|      50 |    200 | Pat       | Ray       | Representative | 6000       | 2005-08-17   | ENTC      | Nashik   |
+|     150 |    201 | Peter     | Harstein  | Manager        | 13000      | 2004-02-13   | Computer  | Pune     |
+|     100 |    202 | Harper    | Mavris    | Programmer     | 11000      | 2002-06-07   | IT        | Mumbai   |
+|      50 |    203 | Shelly    | Higgins   | Manager        | 13200      | 2002-06-07   | ENTC      | Nashik   |
+|     150 |    204 | William   | Geitz     | Accountant     | 8300       | 2008-01-13   | Computer  | Pune     |
+|     100 |    205 | Steven    | King      | Clerk          | 2600       | 2003-07-17   | IT        | Mumbai   |
+|      50 |    206 | Alexander | Hunold    | Programmer     | 9000       | 2006-01-03   | ENTC      | Nashik   |
+|     150 |    207 | Harry     | Ernst     | Programmer     | 4800       | 2021-05-14   | Computer  | Pune     |
++---------+--------+-----------+-----------+----------------+------------+--------------+-----------+----------+
+10 rows in set (0.00 sec)
+
+mysql> select employe.emp_fname, employe.emp_pos, department.dept_loc, employe.emp_joindate
+    -> from employe
+    -> inner join department on employe.dept_id = department.dept_id;
++-----------+----------------+----------+--------------+
+| emp_fname | emp_pos        | dept_loc | emp_joindate |
++-----------+----------------+----------+--------------+
+| Donald    | Clerk          | Pune     | 2007-06-21   |
+| Jennifer  | Assistant      | Mumbai   | 2003-09-17   |
+| Pat       | Representative | Nashik   | 2005-08-17   |
+| Peter     | Manager        | Pune     | 2004-02-13   |
+| Harper    | Programmer     | Mumbai   | 2002-06-07   |
+| Shelly    | Manager        | Nashik   | 2002-06-07   |
+| William   | Accountant     | Pune     | 2008-01-13   |
+| Steven    | Clerk          | Mumbai   | 2003-07-17   |
+| Alexander | Programmer     | Nashik   | 2006-01-03   |
+| Harry     | Programmer     | Pune     | 2021-05-14   |
++-----------+----------------+----------+--------------+
+10 rows in set (0.00 sec)
+
+mysql> select employe.emp_fname, employe.emp_pos, department.dept_loc, employe.emp_joindate
+    ->     -> from employe
+    ->     -> inner join department on employe.dept_id = department.dept_id;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '> from employe
+    -> inner join department on employe.dept_id = department.dept' at line 2
+mysql> select employe.emp_fname, employe.emp_pos, department.dept_loc, employe.emp_joindate
+select employe.emp_fname, employe.emp_pos, department.dept_loc, employe.emp_joindate
+^C
+mysql> select employe.emp_fname, employe.emp_pos, department.dept_loc, employe.emp_joindate
+    -> from employe
+    -> inner join department on employe.dept_id = department.dept_id
+    -> group by dept_id;
+ERROR 1052 (23000): Column 'dept_id' in group statement is ambiguous
+mysql> select employe.emp_fname, employe.emp_pos, department.dept_loc, employe.emp_joindate
+    -> from employe
+    -> inner join department on employe.dept_id = department.dept_id
+    -> group by department.dept_id;
++-----------+----------------+----------+--------------+
+| emp_fname | emp_pos        | dept_loc | emp_joindate |
++-----------+----------------+----------+--------------+
+| Pat       | Representative | Nashik   | 2005-08-17   |
+| Jennifer  | Assistant      | Mumbai   | 2003-09-17   |
+| Donald    | Clerk          | Pune     | 2007-06-21   |
++-----------+----------------+----------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> select employe.emp_fname, employe.emp_pos, department.dept_loc, employe.emp_joindate
+    -> from employe
+    -> inner join department on employe.dept_id = department.dept_id
+    -> group by ;
+[1]+  Stopped                 mysql -h 10.10.15.233 -u te31458 -p
+te@pict-OptiPlex-9020:~$ mysql -h 10.10.15.233 -u te31458 -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 188
+Server version: 5.5.43-MariaDB MariaDB Server
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use 31458_db
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> use 31458_db;
+Database changed
+mysql> select employe.emp_fname, employe.emp_pos, department.dept_loc, employe.emp_joindate
+    -> from employe
+    -> inner join department on employe.dept_id = department.dept_id
+    -> group by department.dept_id
+    -> having department.dept_id in (150, 100, 50);
++-----------+----------------+----------+--------------+
+| emp_fname | emp_pos        | dept_loc | emp_joindate |
++-----------+----------------+----------+--------------+
+| Pat       | Representative | Nashik   | 2005-08-17   |
+| Jennifer  | Assistant      | Mumbai   | 2003-09-17   |
+| Donald    | Clerk          | Pune     | 2007-06-21   |
++-----------+----------------+----------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> select employe.emp_fname, employe.emp_pos, department.dept_loc, employe.emp_joindate, department.dept_id
+    -> from employe
+    -> inner join department on employe.dept_id = department.dept_id
+    -> order by department.dept_id;
++-----------+----------------+----------+--------------+---------+
+| emp_fname | emp_pos        | dept_loc | emp_joindate | dept_id |
++-----------+----------------+----------+--------------+---------+
+| Alexander | Programmer     | Nashik   | 2006-01-03   |      50 |
+| Shelly    | Manager        | Nashik   | 2002-06-07   |      50 |
+| Pat       | Representative | Nashik   | 2005-08-17   |      50 |
+| Harper    | Programmer     | Mumbai   | 2002-06-07   |     100 |
+| Jennifer  | Assistant      | Mumbai   | 2003-09-17   |     100 |
+| Steven    | Clerk          | Mumbai   | 2003-07-17   |     100 |
+| Donald    | Clerk          | Pune     | 2007-06-21   |     150 |
+| Harry     | Programmer     | Pune     | 2021-05-14   |     150 |
+| William   | Accountant     | Pune     | 2008-01-13   |     150 |
+| Peter     | Manager        | Pune     | 2004-02-13   |     150 |
++-----------+----------------+----------+--------------+---------+
+10 rows in set (0.00 sec)
+
+mysql> select * from department;
++---------+-----------+----------+
+| dept_id | dept_name | dept_loc |
++---------+-----------+----------+
+|      50 | ENTC      | Nashik   |
+|     100 | IT        | Mumbai   |
+|     150 | Computer  | Pune     |
++---------+-----------+----------+
+3 rows in set (0.00 sec)
+
+mysql> select * from project;
++---------+---------+-------------------+---------------+-----------+-----------+
+| proj_id | dept_id | proj_name         | proj_location | proj_cost | proj_year |
++---------+---------+-------------------+---------------+-----------+-----------+
+|     344 |     100 | Expense Tracker   | Pune          |     10000 |      2004 |
+|     345 |     100 | Health Consultant | Mumbai        |      5000 |      2005 |
+|     346 |     150 | Crypto Tracker    | Mumbai        |      6000 |      2006 |
+|     347 |     150 | Pattern Locking   | Pune          |     10000 |      2007 |
+|     348 |      50 | File Finder       | Nashik        |      7000 |      2007 |
+|     349 |      50 | Face Recognition  | Pune          |     10000 |      2008 |
++---------+---------+-------------------+---------------+-----------+-----------+
+6 rows in set (0.00 sec)
+
+mysql> insert into department values (200, 'AIML', 'Hyderabad');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into project values (350, 200, 'Attendance Mangement', 'Hyderabad', 8000, '2009');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from department;
++---------+-----------+-----------+
+| dept_id | dept_name | dept_loc  |
++---------+-----------+-----------+
+|      50 | ENTC      | Nashik    |
+|     100 | IT        | Mumbai    |
+|     150 | Computer  | Pune      |
+|     200 | AIML      | Hyderabad |
++---------+-----------+-----------+
+4 rows in set (0.00 sec)
+
+mysql> select * from project;
++---------+---------+----------------------+---------------+-----------+-----------+
+| proj_id | dept_id | proj_name            | proj_location | proj_cost | proj_year |
++---------+---------+----------------------+---------------+-----------+-----------+
+|     344 |     100 | Expense Tracker      | Pune          |     10000 |      2004 |
+|     345 |     100 | Health Consultant    | Mumbai        |      5000 |      2005 |
+|     346 |     150 | Crypto Tracker       | Mumbai        |      6000 |      2006 |
+|     347 |     150 | Pattern Locking      | Pune          |     10000 |      2007 |
+|     348 |      50 | File Finder          | Nashik        |      7000 |      2007 |
+|     349 |      50 | Face Recognition     | Pune          |     10000 |      2008 |
+|     350 |     200 | Attendance Mangement | Hyderabad     |      8000 |      2009 |
++---------+---------+----------------------+---------------+-----------+-----------+
+7 rows in set (0.00 sec)
+
+mysql> select emp_fname, emp_pos, dept_loc, emp_joindate
+    -> from employe
+    -> natural join department
+    -> order by dept_id;
++-----------+----------------+----------+--------------+
+| emp_fname | emp_pos        | dept_loc | emp_joindate |
++-----------+----------------+----------+--------------+
+| Pat       | Representative | Nashik   | 2005-08-17   |
+| Shelly    | Manager        | Nashik   | 2002-06-07   |
+| Alexander | Programmer     | Nashik   | 2006-01-03   |
+| Harper    | Programmer     | Mumbai   | 2002-06-07   |
+| Steven    | Clerk          | Mumbai   | 2003-07-17   |
+| Jennifer  | Assistant      | Mumbai   | 2003-09-17   |
+| Peter     | Manager        | Pune     | 2004-02-13   |
+| William   | Accountant     | Pune     | 2008-01-13   |
+| Harry     | Programmer     | Pune     | 2021-05-14   |
+| Donald    | Clerk          | Pune     | 2007-06-21   |
++-----------+----------------+----------+--------------+
+10 rows in set (0.01 sec)
+
+mysql> select emp_id, emp_fname, emp_lname, emp_pos, emp_salary, emp_joindate, proj_id, proj_cost
+    -> from employe
+    -> natural join project
+    -> where proj_location != 'Hyderabad';
++--------+-----------+-----------+----------------+------------+--------------+---------+-----------+
+| emp_id | emp_fname | emp_lname | emp_pos        | emp_salary | emp_joindate | proj_id | proj_cost |
++--------+-----------+-----------+----------------+------------+--------------+---------+-----------+
+|    198 | Donald    | OConnell  | Clerk          | 2600       | 2007-06-21   |     346 |      6000 |
+|    198 | Donald    | OConnell  | Clerk          | 2600       | 2007-06-21   |     347 |     10000 |
+|    199 | Jennifer  | Grant     | Assistant      | 4400       | 2003-09-17   |     344 |     10000 |
+|    199 | Jennifer  | Grant     | Assistant      | 4400       | 2003-09-17   |     345 |      5000 |
+|    200 | Pat       | Ray       | Representative | 6000       | 2005-08-17   |     348 |      7000 |
+|    200 | Pat       | Ray       | Representative | 6000       | 2005-08-17   |     349 |     10000 |
+|    201 | Peter     | Harstein  | Manager        | 13000      | 2004-02-13   |     346 |      6000 |
+|    201 | Peter     | Harstein  | Manager        | 13000      | 2004-02-13   |     347 |     10000 |
+|    202 | Harper    | Mavris    | Programmer     | 11000      | 2002-06-07   |     344 |     10000 |
+|    202 | Harper    | Mavris    | Programmer     | 11000      | 2002-06-07   |     345 |      5000 |
+|    203 | Shelly    | Higgins   | Manager        | 13200      | 2002-06-07   |     348 |      7000 |
+|    203 | Shelly    | Higgins   | Manager        | 13200      | 2002-06-07   |     349 |     10000 |
+|    204 | William   | Geitz     | Accountant     | 8300       | 2008-01-13   |     346 |      6000 |
+|    204 | William   | Geitz     | Accountant     | 8300       | 2008-01-13   |     347 |     10000 |
+|    205 | Steven    | King      | Clerk          | 2600       | 2003-07-17   |     344 |     10000 |
+|    205 | Steven    | King      | Clerk          | 2600       | 2003-07-17   |     345 |      5000 |
+|    206 | Alexander | Hunold    | Programmer     | 9000       | 2006-01-03   |     348 |      7000 |
+|    206 | Alexander | Hunold    | Programmer     | 9000       | 2006-01-03   |     349 |     10000 |
+|    207 | Harry     | Ernst     | Programmer     | 4800       | 2021-05-14   |     346 |      6000 |
+|    207 | Harry     | Ernst     | Programmer     | 4800       | 2021-05-14   |     347 |     10000 |
++--------+-----------+-----------+----------------+------------+--------------+---------+-----------+
+20 rows in set (0.00 sec)
+
+mysql> select dept_name, concat(emp_fname, ' ', emp_lname) as emp_name, emp_pos
+    -> from employe
+    -> natural join project
+    -> natural join department
+    -> where proj_year = '2007';
++-----------+------------------+----------------+
+| dept_name | emp_name         | emp_pos        |
++-----------+------------------+----------------+
+| Computer  | Donald OConnell  | Clerk          |
+| ENTC      | Pat Ray          | Representative |
+| Computer  | Peter Harstein   | Manager        |
+| ENTC      | Shelly Higgins   | Manager        |
+| Computer  | William Geitz    | Accountant     |
+| ENTC      | Alexander Hunold | Programmer     |
+| Computer  | Harry Ernst      | Programmer     |
++-----------+------------------+----------------+
+7 rows in set (0.00 sec)
+
+mysql> select emp_pos, dept_name
+    -> from employe
+    -> natural join project
+    -> natural join department
+    -> where proj_cost > 8000;
++----------------+-----------+
+| emp_pos        | dept_name |
++----------------+-----------+
+| Clerk          | Computer  |
+| Assistant      | IT        |
+| Representative | ENTC      |
+| Manager        | Computer  |
+| Programmer     | IT        |
+| Manager        | ENTC      |
+| Accountant     | Computer  |
+| Clerk          | IT        |
+| Programmer     | ENTC      |
+| Programmer     | Computer  |
++----------------+-----------+
+10 rows in set (0.00 sec)
+
+mysql> select proj_name
+    -> from project
+    -> where proj_year = '2007';
++-----------------+
+| proj_name       |
++-----------------+
+| Pattern Locking |
+| File Finder     |
++-----------------+
+2 rows in set (0.00 sec)
+
+mysql> select dept_name
+    -> from department
+    -> natural join employe
+    -> group by dept_name
+    -> having count(dept_name) = 3;
++-----------+
+| dept_name |
++-----------+
+| ENTC      |
+| IT        |
++-----------+
+2 rows in set (0.00 sec)
+
+mysql> select count(emp_id)
+    -> from employe
+    -> natural join project 
+    -> where proj_year < '2006';
++---------------+
+| count(emp_id) |
++---------------+
+|             6 |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> create view emp_dept as 
+    -> select *
+    -> from employe
+    -> natural join department;
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> select * from emp_dept;
++---------+--------+-----------+-----------+----------------+------------+--------------+-----------+----------+
+| dept_id | emp_id | emp_fname | emp_lname | emp_pos        | emp_salary | emp_joindate | dept_name | dept_loc |
++---------+--------+-----------+-----------+----------------+------------+--------------+-----------+----------+
+|     150 |    198 | Donald    | OConnell  | Clerk          | 2600       | 2007-06-21   | Computer  | Pune     |
+|     100 |    199 | Jennifer  | Grant     | Assistant      | 4400       | 2003-09-17   | IT        | Mumbai   |
+|      50 |    200 | Pat       | Ray       | Representative | 6000       | 2005-08-17   | ENTC      | Nashik   |
+|     150 |    201 | Peter     | Harstein  | Manager        | 13000      | 2004-02-13   | Computer  | Pune     |
+|     100 |    202 | Harper    | Mavris    | Programmer     | 11000      | 2002-06-07   | IT        | Mumbai   |
+|      50 |    203 | Shelly    | Higgins   | Manager        | 13200      | 2002-06-07   | ENTC      | Nashik   |
+|     150 |    204 | William   | Geitz     | Accountant     | 8300       | 2008-01-13   | Computer  | Pune     |
+|     100 |    205 | Steven    | King      | Clerk          | 2600       | 2003-07-17   | IT        | Mumbai   |
+|      50 |    206 | Alexander | Hunold    | Programmer     | 9000       | 2006-01-03   | ENTC      | Nashik   |
+|     150 |    207 | Harry     | Ernst     | Programmer     | 4800       | 2021-05-14   | Computer  | Pune     |
++---------+--------+-----------+-----------+----------------+------------+--------------+-----------+----------+
+10 rows in set (0.00 sec)
+
+mysql> create view emp_details as
+    -> select emp_id, emp_fname, emp_lname
+    -> from employe;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> select * from emp_details;
++--------+-----------+-----------+
+| emp_id | emp_fname | emp_lname |
++--------+-----------+-----------+
+|    198 | Donald    | OConnell  |
+|    199 | Jennifer  | Grant     |
+|    200 | Pat       | Ray       |
+|    201 | Peter     | Harstein  |
+|    202 | Harper    | Mavris    |
+|    203 | Shelly    | Higgins   |
+|    204 | William   | Geitz     |
+|    205 | Steven    | King      |
+|    206 | Alexander | Hunold    |
+|    207 | Harry     | Ernst     |
++--------+-----------+-----------+
+10 rows in set (0.00 sec)
+
+mysql> set foreign_key_checks = 0;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> insert into emp_details values(208, 'Nate', 'Pattison');
+Query OK, 1 row affected, 1 warning (0.02 sec)
+
+mysql> select * from emp_details;
++--------+-----------+-----------+
+| emp_id | emp_fname | emp_lname |
++--------+-----------+-----------+
+|    198 | Donald    | OConnell  |
+|    199 | Jennifer  | Grant     |
+|    200 | Pat       | Ray       |
+|    201 | Peter     | Harstein  |
+|    202 | Harper    | Mavris    |
+|    203 | Shelly    | Higgins   |
+|    204 | William   | Geitz     |
+|    205 | Steven    | King      |
+|    206 | Alexander | Hunold    |
+|    207 | Harry     | Ernst     |
+|    208 | Nate      | Pattison  |
++--------+-----------+-----------+
+11 rows in set (0.00 sec)
+
+mysql> set foreign_key_checks = 1;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> drop view emp_details;
+Query OK, 0 rows affected (0.00 sec)
