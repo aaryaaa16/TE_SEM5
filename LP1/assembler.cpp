@@ -62,12 +62,17 @@ public:
 class Assembler {
     Tables t;
     fstream file;
+    fstream opfile;
 
     public:
     Assembler() {
         file.open("sample.txt", ios::in);
         if (!file.is_open()) {
-            cout<<"Error openeing file"<<endl;
+            cout<<"Error opening file"<<endl;
+        }
+        opfile.open("/home/pict/31458/Assignment_2/src/output.txt", ios::in);
+        if (!opfile.is_open()) {
+        	cout<<"Error opening file"<<endl;
         }
     }
 
@@ -116,44 +121,78 @@ class Assembler {
                     cout<<lc<<"\t"<<"("<<ic.first<<", "<<ic.second<<")"<<"\t"<<endl;
                 } else if (words.size() == 2) {
                     lc = counter++;
-                    if (t.OPTAB.find(words[0]) != t.OPTAB.end()) {
-                        ic = t.OPTAB[words[0]];
-                    }
-                    index = t.searchSymbol(words[1]);
-                    ic1.first = "S";
-                    if (index >= 0) {
-                        ic1.second = index;
+                    if (words[0] == "ORIGIN") {
+                    	if (t.OPTAB.find(words[0]) != t.OPTAB.end()) {
+                    		ic = t.OPTAB[words[0]];
+                    	}
+                    	index = t.searchSymbol(words[1]);
+                    	counter = t.symbolTable[index].second;
+                    	ic1.first = "S";
+                    	ic1.second = index;
                     } else {
-                        scounter++;
-                        ic1.second = scounter;
-                        symbol.first = words[1];
-                        symbol.second = -1;
-                        t.symbolTable.push_back(symbol);
+                    	if (t.OPTAB.find(words[0]) != t.OPTAB.end()) {
+                    		ic = t.OPTAB[words[0]];
+                    	}
+                    	index = t.searchSymbol(words[1]);
+                    	ic1.first = "S";
+                    	if (index >= 0) {
+                    		ic1.second = index + 1;
+                    	} else {
+                    		scounter++;
+                    		ic1.second = scounter;
+                    		symbol.first = words[1];
+                    		symbol.second = -1;
+                    		t.symbolTable.push_back(symbol);
+                    	}
                     }
                     cout<<lc<<"\t"<<"("<<ic.first<<", "<<ic.second<<")"<<"\t"<<"("<<ic1.first<<", "<<ic1.second<<")"<<endl;
                 } else if (words.size() == 3) {
                     lc = counter++;
                     if (t.OPTAB.find(words[0]) != t.OPTAB.end()) {
                         ic = t.OPTAB[words[0]];
-                        ic1.second = t.REG[words[1]];
-                        index = t.searchSymbol(words[2]);
-                        ic2.first = "S";
-                        if (index >= 0) {
-                            ic2.second = index;
-                        } else {
-                            scounter++;
-                            ic2.second = scounter;
-                            symbol.first = words[2];
-                            symbol.second = -1;
-                            t.symbolTable.push_back(symbol);
+                        if (t.REG.find(words[1]) != t.REG.end()) {
+                        	ic1.second = t.REG[words[1]];
+                        } else if (t.CONDCS.find(words[1]) != t.CONDCS.end()) {
+                        	ic1.second = t.CONDCS[words[1]];
                         }
-                        cout<<lc<<"\t"<<"("<<ic.first<<", "<<ic.second<<")"<<"\t"<<"("<<ic1.second<<")"<<"\t"<<"("<<ic2.first<<", "<<ic2.second<<")"<<endl;
+                        if (t.REG.find(words[2]) != t.REG.end()) {
+                        	ic2.second = t.REG[words[2]];
+                        	cout<<lc<<"\t"<<"("<<ic.first<<", "<<ic.second<<")"<<"\t"<<"("<<ic1.second<<")"<<"\t"<<"("<<ic2.second<<")"<<endl;
+                        } else {
+                        	ic2.first = "S";
+                        	index = t.searchSymbol(words[2]);
+                        	if (index >= 0) {
+                        		ic2.second = index + 1;
+                        	} else {
+                        		scounter++;
+                        		ic2.second = scounter;
+                        		symbol.first = words[2];
+                        		symbol.second = -1;
+                        		t.symbolTable.push_back(symbol);
+                        	}
+                        	cout<<lc<<"\t"<<"("<<ic.first<<", "<<ic.second<<")"<<"\t"<<"("<<ic1.second<<")"<<"\t"<<"("<<ic2.first<<", "<<ic2.second<<")"<<endl;
+                        }
                     } else if (t.OPTAB.find(words[1]) != t.OPTAB.end()) {
                         ic = t.OPTAB[words[1]];
-                        ic1.first = "C";
-                        ic1.second = stoi(words[2]);
-                        index = t.searchSymbol(words[0]);
-                        t.symbolTable[index].second = lc;
+                        if (words[1] == "EQU") {
+                        	index = t.searchSymbol(words[0]);
+                        	if (index < 0) {
+                        		scounter++;
+                        		symbol.first = words[0];
+                        		symbol.second = lc;
+                        		t.symbolTable.push_back(symbol);
+                        	} else {
+                        		t.symbolTable[index].second = lc;
+                        	}
+                        	ic2.first = "S";
+                        	index = t.searchSymbol(words[2]);
+                        	ic2.second = index + 1;
+                        } else {
+                        	ic1.first = "C";
+                        	ic1.second = stoi(words[2]);
+                        	index = t.searchSymbol(words[0]);
+                            t.symbolTable[index].second = lc;
+                        }
                         cout<<lc<<"\t"<<"("<<ic.first<<", "<<ic.second<<")"<<"\t"<<"("<<ic1.first<<", "<<ic1.second<<")"<<endl;
                     }
                 } else {
@@ -162,16 +201,19 @@ class Assembler {
                         ic = t.OPTAB[words[1]];
                     }
                     ic1.second = t.REG[words[2]];
-                    index = t.searchSymbol(words[0]);
+                    scounter++;
+                    symbol.first = words[0];
+                    symbol.second = lc;
+                    t.symbolTable.push_back(symbol);
+                    index = t.searchSymbol(words[3]);
                     ic2.first = "S";
                     if (index >= 0) {
-                        ic2.second = index;
-                        t.symbolTable[index].second = lc;
+                        ic2.second = index + 1;
                     } else {
                         scounter++;
                         ic2.second = scounter;
-                        symbol.first = words[0];
-                        symbol.second = lc;
+                        symbol.first = words[3];
+                        symbol.second = -1;
                         t.symbolTable.push_back(symbol);
                     }
                     cout<<lc<<"\t"<<"("<<ic.first<<", "<<ic.second<<")"<<"\t"<<"("<<ic1.second<<")"<<"\t"<<"("<<ic2.first<<", "<<ic2.second<<")"<<endl;
