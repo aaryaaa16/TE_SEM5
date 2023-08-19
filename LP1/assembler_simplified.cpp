@@ -38,17 +38,17 @@ public:
 		OPTAB["DC"] = {"DL",1};
 		OPTAB["DS"] = {"DL",2};
 
-		REG["AREG"]=1;
-		REG["BREG"]=2;
-		REG["CREG"]=3;
-		REG["DREG"]=4;
+		REG["AREG"] = 1;
+		REG["BREG"] = 2;
+		REG["CREG"] = 3;
+		REG["DREG"] = 4;
 
-		CONDCS["LT"]=1;
-		CONDCS["LE"]=2;
-		CONDCS["EQ"]=3;
-		CONDCS["GT"]=4;
-		CONDCS["GE"]=5;
-		CONDCS["ANY"]=6;
+		CONDCS["LT"] = 1;
+		CONDCS["LE"] = 2;
+		CONDCS["EQ"] = 3;
+		CONDCS["GT"] = 4;
+		CONDCS["GE"] = 5;
+		CONDCS["ANY"] = 6;
 	}
 
     int searchSymbol(string symbol) {
@@ -301,13 +301,13 @@ class Assembler {
     
     void displaySymbolTable() {
         for (int i = 0; i < t.SYMBTAB.size(); i++) {
-            symbTab<<t.SYMBTAB[i].first<<"\t"<<t.SYMBTAB[i].second<<endl;
+            symbTab<<t.SYMBTAB[i].first<<" "<<t.SYMBTAB[i].second<<endl;
         }
     }
 
     void displayLiteralTable() {
     	for (int i = 0; i < t.LITTAB.size(); i++) {
-    		litTab<<t.LITTAB[i].first<<"\t"<<t.LITTAB[i].second<<endl;
+    		litTab<<t.LITTAB[i].first<<" "<<t.LITTAB[i].second<<endl;
     	}
     }
 
