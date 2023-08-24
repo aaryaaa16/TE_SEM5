@@ -49,7 +49,7 @@ Query OK, 1 row affected (0.02 sec)
 mysql> insert into employe values(201, 150, 'Peter', 'Harstein', 'Manager', '13000', '2004-02-13');
 Query OK, 1 row affected (0.02 sec)
 
-mysql> insert into employe values(202, 100, 'Susan', 'Mavris', 'Represenatative', '6500', '2002-06-07’);
+mysql> insert into employe values(202, 100, 'Susan', 'Mavris', 'Represenatative', '6500', '2002-06-07Ã¢â‚¬â„¢);
 Query OK, 1 row affected (0.02 sec)
 
 mysql> insert into employe values(203, 50, 'Shelly', 'Higgins', 'Manager', '12000', '2002-06-07');

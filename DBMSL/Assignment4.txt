@@ -1,0 +1,99 @@
+mysql> use 31458_db
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+mysql> create table Borrower(
+    -> Roll int,
+    -> Name varchar(20),
+    -> DateofIssue date,
+    -> NameofBook varchar(20),
+    -> Status char(1),
+    -> primary key(Roll)
+    -> );
+Query OK, 0 rows affected (0.16 sec)
+
+mysql> create table Fine(
+    -> Roll int,
+    -> Date date,
+    -> Amt int,
+    -> foreign key (Roll) references Borrower(Roll)
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> INSERT INTO Borrower (Roll, Name, DateofIssue, NameofBook, Status)
+    -> VALUES (1, 'John Doe', '2023-08-01', 'Introduction to SQL', 'I');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO Borrower (Roll, Name, DateofIssue, NameofBook, Status)
+    -> VALUES (2, 'Jane Smith', '2023-07-15', 'Database Management', 'I');
+Query OK, 1 row affected (0.07 sec)
+
+mysql> INSERT INTO Borrower (Roll, Name, DateofIssue, NameofBook, Status)
+    -> VALUES (3, 'Alice Johnson', '2023-08-10', 'SQL Fundamentals', 'I');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from Borrower;
++------+---------------+-------------+---------------------+--------+
+| Roll | Name          | DateofIssue | NameofBook          | Status |
++------+---------------+-------------+---------------------+--------+
+|    1 | John Doe      | 2023-08-01  | Introduction to SQL | I      |
+|    2 | Jane Smith    | 2023-07-15  | Database Management | I      |
+|    3 | Alice Johnson | 2023-08-10  | SQL Fundamentals    | I      |
++------+---------------+-------------+---------------------+--------+
+3 rows in set (0.00 sec)
+
+mysql> DELIMITER //
+mysql>
+mysql> CREATE PROCEDURE update_fine(p_roll INT, p_book_name VARCHAR(100))
+    -> BEGIN
+    ->     DECLARE v_issuedate DATE;
+    ->     DECLARE v_cur_date DATE;
+    ->     DECLARE v_num_days INT;
+    ->     DECLARE v_fine_amt INT DEFAULT 0;
+    ->
+    ->     SET v_cur_date = CURDATE();
+    ->
+    ->     SELECT DateofIssue, Status INTO v_issuedate, v_fine_amt
+    ->     FROM Borrower
+    ->     WHERE Roll = p_roll AND NameofBook = p_book_name;
+    ->
+    ->     SET v_num_days = DATEDIFF(v_cur_date, v_issuedate);
+    ->
+    ->     IF v_num_days > 30 THEN
+    ->         SET v_fine_amt = 50 * v_num_days;
+    ->     ELSEIF v_num_days >= 15 THEN
+    ->         SET v_fine_amt = 5 * v_num_days;
+    ->     END IF;
+    ->
+    ->     IF v_fine_amt > 0 THEN
+    ->         INSERT INTO Fine (Roll, Date, Amt)
+    ->         VALUES (p_roll, v_cur_date, v_fine_amt);
+    ->     END IF;
+    ->
+    ->     UPDATE Borrower
+    ->     SET Status = 'R'
+    ->     WHERE Roll = p_roll AND NameofBook = p_book_name;
+    -> END;
+    -> //
+Query OK, 0 rows affected (0.00 sec)
+mysql> DELIMITER //
+
+mysql> CALL update_fine(1, 'Introduction to SQL');
++-------------------------------------+
+| message                             |
++-------------------------------------+
+| Book submitted. Fine amount: Rs 115 |
++-------------------------------------+
+1 row in set (0.02 sec)
+
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> select * from Fine;
++------+------------+------+
+| Roll | Date       | Amt  |
++------+------------+------+
+|    1 | 2023-08-24 |  115 |
++------+------------+------+
+1 row in set (0.01 sec)
+
+mysql>
