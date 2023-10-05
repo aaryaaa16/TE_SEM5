@@ -126,11 +126,11 @@ public:
 							}
 						}
 					}
-					m.PP = pcounter;
 					if (kcounter != 0) {
 						m.KPDTP = KPDTAB.size() - kcounter + 1;
 					}
 					m.KP = kcounter;
+					m.PP = pcounter - kcounter;
 					m.MDTP = mcounter + 1;
 					firstLine = false;
 					pcounter = 0;
@@ -139,7 +139,7 @@ public:
 				} else if (!firstLine && insideMacro) {
                     for (int i = 0; i < words.size(); i++) {
                         if(words[i].at(0) == '&') {
-                            string parameter = "(P, ";
+                            string parameter = "(P,";
                             parameter += to_string(findParameter(words[i], name));
                             parameter += ")";
                             temp.push_back(parameter);
